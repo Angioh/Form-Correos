@@ -36,3 +36,7 @@ function cambiarDestinatario(radio){
         document.getElementById('companhia').removeAttribute('hidden');
     }
 }
+
+
+
+lala
