@@ -31,14 +31,113 @@
           elemento.className = "form-control is-valid";
         }
       }
+      function validarNumberInside(elemento, min, max) {
+        if (!validarNumber(elemento.value, min, max)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+        }
+      }
+      function validarTelfInside(elemento) {
+        if (!validarTelefono(elemento)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+        }
+      }
+      function validarEmailInside(elemento) {
+        if (!validarEmail(elemento)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+        }
+      }
+      function fechaVueltaInside(elemento) {
+        if (!validarFechaDes(elemento.value)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+        }
+      }
+      function validarIbanInside(elemento) {
+        if (!validarIban(elemento.value)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+        }
+      }
+      function validarViaInside(elemento) {
+        if (!validarVia(elemento.value)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+          console.log(elemento.value)
+        }
+      }
+
       function recuperarDatos() {
+        let mensCorrecto = "--DATOS DESTINATARIO--\n";
         if (!document.getElementById("persona").hasAttribute("hidden")) {
-          var mensCorrecto = "Nombre: " + nombre.value + ".\n";
+          mensCorrecto += "Nombre: " + nombre.value + ".\n";
           mensCorrecto +=
             "Apellidos : " + apellido1.value + " " + apellido2.value + ".\n";
-        }else{
-          var mensCorrecto = "Empresa: "+company.value+".\n"
+        } else {
+          mensCorrecto += "Empresa: " + company.value + ".\n";
         }
+        mensCorrecto += "Dirección: " + vias.value + " " + nomVia.value +" "+numero.value+" "
+        +piso.value+ " "+puerta.value +".\n";
+        mensCorrecto +=
+          "Código postal: " +
+          cPostal.value +
+          ", Provincia: " +
+          provincia.value +
+          ", Localidad:" +
+          localidad.value +
+          ".\n";
+
+        mensCorrecto += "Móvil: " + movil.value + ", ";
+        if (email.value != "") mensCorrecto += "Email: " + email.value + ", ";
+        mensCorrecto += "Teléfono contacto: " + telefono.value + ".\n";
+        mensCorrecto += "--DATOS DEL ENVÍO--\n";
+        mensCorrecto += "Referencia 1: "+ref1.value +".\n";
+        mensCorrecto += "Referencia 2: "+ref2.value +".\n";
+        mensCorrecto += "Referencia 3: "+ref3.value +".\n";
+        mensCorrecto += "--PESO Y TAMAÑO--.\n";
+        mensCorrecto += "Peso: "+peso.value +"Kg.\n";
+        mensCorrecto += "Peso Volumétrico: "+pVolumetrico.value +"Kg.\n";
+        mensCorrecto += "Alto: "+alto.value +"cm.\n";
+        mensCorrecto += "Ancho: "+ancho.value +"cm.\n";
+        mensCorrecto += "Largo: "+largo.value +"cm.\n";
+        mensCorrecto += "Envío de vuelta: "+fechaVuelt.value +".\n";
+        mensCorrecto += "--SERVICIOS ADICIONALES DEL ENVÍO--\n";
+        mensCorrecto += "Seguro a todo riesgo: "+importe.value +"€.\n";
+        mensCorrecto += "Reembolo en cuenta: "+importReembolso.value +"€.\n";
+        mensCorrecto += "Número de cuenta: "+iban.value +"\n";
+
         return mensCorrecto;
       }
       function mostrarModal() {
@@ -57,128 +156,570 @@
             mensaje +=
               "El nombre tiene que ser una cadena de caracteres de entre 2 y 50 caracteres.\n";
           }
-        }
-
-        if (!document.getElementById("persona").hasAttribute("hidden")) {
           if (!validarString(apellido1.value, 2, 50)) {
             res = false;
-            mensaje += "El primero apellido es obligatorio";
+            mensaje += "El primer apellido es obligatorio.\n";
           }
         }
 
-        if (res == false) {
-          alert(mensaje);
+        if (!document.getElementById("companhia").hasAttribute("hidden")) {
+          if (!validarString(company.value, 2, 50)) {
+            res = false;
+            mensaje += "Hace falta el nombre de la empresa.\n";
+          }
         }
-        console.log("Llego hasta aqui");
+
+        if (!validarString(nomVia.value, 2, 50)) {
+          res = false;
+          mensaje += "El nombre de la vía es obligatoria.\n";
+        }
+        if(!validarVia(vias.value)){
+          res = false;
+          mensaje += "Seleccione un tipo de vía.\n";
+        }
+
+        if (!validarNumber(cPostal.value, 5, 5)) {
+          res = false;
+          mensaje += "Código postal inválido o no existe.\n";
+        }
+        if (!validarString(localidad.value, 2, 50)) {
+          res = false;
+          mensaje += "Tiene que ingresar una localidad.\n";
+        }
+
+        if (!validarTelefono(movil)) {
+          res = false;
+          mensaje += "El número móvil introducido no es válido.\n";
+        }
+
+        if (!validarTelefono(telefono)) {
+          res = false;
+          mensaje += "El teléfono de contacto introducido no es válido.\n";
+        }
+
+        if (!validarEmail(email)) {
+          res = false;
+          mensaje += "El email introducido no es válido.\n";
+        }
+        if (!fechaVuelt.hasAttribute("disabled")) {
+          if(!validarFechaDes(fechaVuelt.value)){
+          res = false;
+          mensaje += "Formato de fecha inválido o muy cerca del día actual.\n";
+        }
+        }
+        if (!importe.hasAttribute("disabled")) {
+          if(!validarNumber(importe.value,2,5)){
+          res = false;
+          mensaje += "Importe de seguro no válido.\n";
+        }
+        }
+      
+        if (!importReembolso.hasAttribute("disabled")) {
+          if(!validarNumber(importReembolso.value,2,5)){
+          res = false;
+          mensaje += "Importe de reembolso no válido.\n";
+        }
+        }
+
+
+        if (res == false) {
+          document.getElementById("cuerpoModal-errores").innerText = mensaje;
+          var myModal = new bootstrap.Modal(
+            document.getElementById("miModalErrores")
+          );
+          myModal.show();
+        }
         return res;
       }
     </script>
     <title>Correos</title>
   </head>
-  <body>
-    <div id="body">
-      <div id="cabecera">
-        <h1>Datos del destinatario</h1>
-        <p>Introduce los datos del destinatario</p>
-      </div>
-      <form
-        id="formulario"
-        action="javascript:mostrarModal()"
-        onsubmit="return validarForm()"
+  <body class="m-0 row justify-content-center">
+    <div
+      id="body"
+      class="container d-flex justify-content-center align-items-center"
+    >
+      <div
+        style="background-color: aliceblue; border: 1px solid black"
+        class="container pr-2 pb-2 pt-2"
       >
-        <div id="formBody">
-          <div id="destinatarios">
-            <input
-              type="radio"
-              checked
-              name="destinatario"
-              value="particular"
-              id="particular"
-              onclick="cambiarDestinatario(this)"
-            />
-            <label for="particular">Particular</label>
-
-            <input
-              type="radio"
-              name="destinatario"
-              value="empresa"
-              id="empresa"
-              onclick="cambiarDestinatario(this)"
-            />
-            <label for="empresa">Empresa</label>
+        <form
+          id="formulario"
+          action="javascript:mostrarModal()"
+          onsubmit="return validarForm()"
+        >
+          <div>
+            <h3>Datos del destinatario</h3>
+            <p>Introduce los datos del destinatario</p>
           </div>
-          <div id="persona">
-            <div>
-              <label for="nombre" class="col-auto"
-                ><p>Nombre:(1)</p>
-                <input
-                  type="text"
-                  id="nombre"
-                  placeholder="Nombre*"
-                  onfocus="entraFoco(this)"
-                  onblur="saleFoco(this);validarStringInside(this,2,50)"
-                />
-              </label>
+          <div id="formBody">
+            <div id="destinatarios">
+              <input
+                type="radio"
+                checked
+                name="destinatario"
+                value="particular"
+                id="particular"
+                onclick="cambiarDestinatario(this)"
+              />
+              <label for="particular">Particular</label>
+
+              <input
+                type="radio"
+                name="destinatario"
+                value="empresa"
+                id="empresa"
+                onclick="cambiarDestinatario(this)"
+              />
+              <label for="empresa">Empresa</label>
             </div>
-            <div id="apellidos" class="row g-2">
-              <div class="col-auto">
-                <label for="apellido1">
-                  <p>Primero apellido:</p>
+            <!-- DESTINATARIO -->
+            <div id="persona">
+              <div>
+                <div class="col-md-4 mt-2">
+                  <label for="nombre" class="form-label">Nombre:(*)</label>
                   <input
+                    class="form-control"
                     type="text"
-                    id="apellido1"
-                    placeholder="Primer apellido*"
+                    id="nombre"
                     onfocus="entraFoco(this)"
                     onblur="saleFoco(this);validarStringInside(this,2,50)"
                   />
-                </label>
+                </div>
               </div>
-              <div class="col-auto">
-                <label for="apellido2">
-                  <p>Segundo apellido:</p>
+
+              <div id="apellidos">
+                <div class="row align-items-end">
+                  <div class="col-md-4 mt-3">
+                    <label for="apellido1" class="form-label"
+                      >Primero apellido(*):</label
+                    >
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="apellido1"
+                      onfocus="entraFoco(this)"
+                      onblur="saleFoco(this);validarStringInside(this,2,50)"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label for="apellido2" class="form-label"
+                      >Segundo apellido:</label
+                    >
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="apellido2"
+                      onfocus="entraFoco(this)"
+                      onblur="saleFoco(this);validarStringInside(this,0,50)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="companhia" hidden>
+              <div class="col-md-4 mt-3">
+                <label for="company" class="form-label"> Empresa:(*) </label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="company"
+                  onfocus="entraFoco(this)"
+                  onblur="saleFoco(this);validarStringInside(this,2,50)"
+                />
+              </div>
+            </div>
+            <!-- DOCUMENTO IDENTIDAD-->
+            <div>
+              <div id="identificacion" class="row align-items-end">
+                <div class="col-md-4 mt-3">
+                  <label for="tipoId" class="form-label"
+                    >Tipo de documento:</label
+                  >
+                  <select name="" id="tipoId" class="form-select">
+                    <option value="DNI">DNI</option>
+                    <option value="NIE">NIE</option>
+                    <option value="NIF">NIF</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="numId" class="form-label"
+                    >Número Documento:</label
+                  >
+                  <input type="text" id="numId" class="form-control" />
+                </div>
+              </div>
+            </div>
+            <!-- DIRECCION -->
+            <div>
+              <div class="row align-items-end">
+                <div class="col-md-4 mt-3">
+                  <label for="vias" class="form-label">Tipo de vía:</label>
+                  <select class="form-select" id="vias" onchange="validarViaInside(this)">
+                    <option selected value="" disabled>
+                      Seleccione tipo vía
+                    </option>
+                    <option value="Blanco">Blanco</option>
+                    <option value="Calle">Calle</option>
+                    <option value="Avenida">Avda</option>
+                    <option value="Plaza">Plaza</option>
+                    <option value="Camino">Camino</option>
+                    <option value="Carretera">Carretera</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="nomVia" class="form-label"
+                    >Nombre de vía(*):</label
+                  >
                   <input
                     type="text"
-                    id="apellido2"
-                    placeholder="Segundo apellido"
+                    class="form-control"
+                    id="nomVia"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarStringInside(this,2,50)"
                   />
-                </label>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="row align-items-end">
+                <div class="col-md-2 mt-3">
+                  <label for="numero" class="form-label">Número</label>
+                  <input
+                    type="text"
+                    maxlength="5"
+                    id="numero"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label for="bloque" class="form-label">Bloque</label>
+                  <input
+                    type="text"
+                    maxlength="5"
+                    id="bloque"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label for="Portal" class="form-label">Portal</label>
+                  <input
+                    type="text"
+                    maxlength="5"
+                    id="Portal"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label for="piso" class="form-label">Piso</label>
+                  <input
+                    type="text"
+                    maxlength="5"
+                    id="piso"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label for="Escalera" class="form-label">Escalera</label>
+                  <input
+                    type="text"
+                    maxlength="5"
+                    id="Escalera"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <label for="puerta" class="form-label">Puerta</label>
+                  <input type="text" name="" id="puerta" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-5">
+                <label for="dirComp" class="form-label"
+                  >Dirección complemento</label
+                >
+                <input type="text" id="dirComp" class="form-control" />
+              </div>
+            </div>
+            <div>
+              <div class="row align-items-end">
+                <div class="col-md-4 mt-3">
+                  <label for="cPostal" class="form-label">C.Postal:(*)</label>
+                  <input
+                    type="text"
+                    name=""
+                    id="cPostal"
+                    class="form-control"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarNumberInside(this,5,5);darProvincia(this.value)"
+                    maxlength="5"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="localidad" class="form-label">Localidad:(*)</label>
+                  <input
+                    type="text"
+                    name=""
+                    id="localidad"
+                    class="form-control"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarStringInside(this,2,50)"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label for="provincia" class="form-label">Provincia</label>
+                  <input
+                    type="text"
+                    name=""
+                    id="provincia"
+                    readonly
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- CONTACTOS-->
+            <div>
+              <div class="row align-items-end">
+                <div class="col-md-4 mt-3">
+                  <label for="movil" class="form-label">Móvil SMS</label>
+                  <input
+                    type="text"
+                    id="movil"
+                    class="form-control"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarTelfInside(this);"
+                    maxlength="9"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label
+                  ><input
+                    id="email"
+                    type="text"
+                    class="form-control"
+                    maxlength="100"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarEmailInside(this)"
+                  />
+                </div>
+                <div class="col-md-4 mb-4">
+                  <label for="telefono" class="form-label"
+                    >Teléfono de contacto</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="telefono"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarTelfInside(this);"
+                    maxlength="9"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- DATOS ENVIO-->
+          <div id="envio">
+            <div>
+              <h3>Datos del envío</h3>
+              <p>Establece los datos del envío</p>
+            </div>
+            <div class="col-md-12" style="border-top: 2px solid lightgray">
+              <label for="ref1" class="form-label">Referencia cliente 1:</label>
+              <input type="text" id="ref1" class="form-control" />
+            </div>
+            <div class="col-md-12">
+              <label for="ref2" class="form-label">Referencia cliente 2:</label>
+              <input type="text" id="ref2" class="form-control" />
+            </div>
+            <div
+              class="col-md-12 pb-3 mb-2"
+              style="border-bottom: 2px solid lightgrey"
+            >
+              <label for="ref3" class="form-label">Referencia cliente 3:</label>
+              <input type="text" id="ref3" class="form-control" />
+            </div>
+          </div>
+          <!-- PESO Y TAMANHO-->
+          <div id="pesoTamanho">
+            <div>
+              <h3>Peso y tamaño</h3>
+            </div>
+            <div
+              id="pesoTam"
+              class="col-md mt-3"
+              style="border-top: 2px solid lightgray"
+            >
+              <div class="row align-items-end">
+                <div class="col-md-5 mt-3">
+                  <label for="peso" class="form-label">Peso(Kg)(*)</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="peso"
+                    maxlength="5"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarNumberInside(this,2,5)"
+                  />
+                </div>
+                <div class="col-md-5">
+                  <label for="pVolumetrico" class="form-label"
+                    >Peso volumétrico(*)</label
+                  >
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="pVolumetrico"
+                    readonly
+                  />
+                </div>
+                <div class="row align-items-end pb-4">
+                  <div class="col-md-3 mt-3">
+                    <label for="alto" class="form-label">Alto:(cm)(*)</label>
+                    <input
+                      type="number"
+                      name=""
+                      id="alto"
+                      class="form-control"
+                      onfocus="entraFoco(this)"
+                      onblur="saleFoco(this);validarNumberInside(this,1,5)"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="ancho" class="form-label">Ancho:(cm)(*)</label>
+                    <input
+                      type="number"
+                      id="ancho"
+                      class="form-control"
+                      onfocus="entraFoco(this)"
+                      onblur="saleFoco(this);validarNumberInside(this,2,5)"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <label for="provincia" class="form-label"
+                      >Largo:(cm)(*)</label
+                    >
+                    <input
+                      type="number"
+                      name=""
+                      id="largo"
+                      class="form-control"
+                      onfocus="entraFoco(this)"
+                      onblur="saleFoco(this);validarNumberInside(this,2,5)"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      onclick="calcularVolumetrico()"
+                    >
+                      Calcular
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Servicios adicionales -->
+          <div id="vuelta">
+            <div style="border-top: 2px solid lightgray">
+              <h3>Preparar envío de vuelta asociado</h3>
+              <p>Indica si desea preparar un envío de vuelta asociado</p>
+            </div>
+            <div id="envioVuelta">
+              <div>
+                <input
+                  type="checkbox"
+                  id="checkVuelta"
+                  onclick="checkActivo(this,fechaVuelt)"
+                />
+                Preparar envío de vuelta asociado
+              </div>
+              <div class="col-md-4 mt-2 mb-3">
+                <label for="fechaVuelt" class="form-label"
+                  ><a
+                  href="#"
+                  data-bs-toggle="tooltip"
+                  title="Elija fecha a partir de 7 días siguientes a la fecha actual"
+                  >Fecha envío de vuelta</a></label
+                >
+                <input
+                  disabled
+                  class="form-control"
+                  type="text"
+                  id="fechaVuelt"
+                  placeholder="dd/mm/aaaa"
+                  onfocus="entraFoco(this)"
+                  onblur="saleFoco(this);fechaVueltaInside(this)"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Servicios adicionales -->
+          <div id="servicios">
+            <div style="border-top: 2px solid lightgray">
+              <h3>Servicios adicionales del envío</h3>
+              <p style="border-bottom: 2px solid lightgray">
+                Establece los servicios adicionales para este envío
+              </p>
+            </div>
+            <div id="serviciosAdd">
+              <div>
+                <input
+                  type="checkbox"
+                  id="valorPaqueteria"
+                  onclick="checkActivo(this,importe)"
+                />
+                Seguro a todo riesgo
+                <div class="col-md-4 mt-2">
+                  <label for="importe" class="form-label">Importe:(*)</label>
+                  <input
+                    disabled
+                    class="form-control"
+                    type="number"
+                    id="importe"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarNumberInside(this,2,5)"
+                  />
+                </div>
+              </div>
+              <div>
+                <input
+                  type="checkbox"
+                  id="Reembolso"
+                  onclick="checkActivo2(this,importReembolso,iban)"
+                />
+                Reembolso en cuenta
+                <div class="col-md-4 mt-2">
+                  <label for="importReembolso" class="form-label"
+                    >Importe:(*)</label
+                  >
+                  <input
+                    disabled
+                    class="form-control"
+                    type="number"
+                    id="importReembolso"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarNumberInside(this,2,5)"
+                  />
+                </div>
+                <div class="col-md-12">
+                  <label for="iban" class="form-label">IBAN</label>
+                  <input type="text" id="iban" disabled class="form-control" onchange="validarIbanInside(this)" />
+                </div>
               </div>
             </div>
           </div>
 
-          <div id="companhia" hidden>
-            <label for="company">
-              <p>Empresa:(1)</p>
-              <input
-                type="text"
-                id="company"
-                placeholder="Compañía*"
-                onfocus="entraFoco(this)"
-                onblur="saleFoco(this);validarStringInside(this,2,50)"
-              />
-            </label>
-          </div>
-          <div id="identificacion" class="row g-2">
-            <div class="col-auto">
-              <label for="tipoId">
-                <p>Tipo de documento:</p>
-                <select name="" id="tipoId">
-                  <option value="DNI">DNI</option>
-                  <option value="NIE">NIE</option>
-                  <option value="NIF">NIF</option>
-                </select>
-              </label>
-            </div>
-            <div class="col-auto">
-              <label for="numId">
-                <p>Número Documento:</p>
-                <input type="text" id="numId" />
-              </label>
+          <div class="row">
+            <div class="col-2 mx-auto mt-3">
+              <button type="submit" class="btn btn-warning">Enviar!!</button>
             </div>
           </div>
-        </div>
-        <button type="submit">Enviar!!</button>
-      </form>
+        </form>
+      </div>
     </div>
 
     <!-- Modal Datos-->
@@ -203,6 +744,38 @@
           <div class="modal-body" id="cuerpoModal">
             ¡Gracias por enviar el formulario!
           </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--- modal Errores-->
+    <div
+      class="modal fade"
+      id="miModalErrores"
+      tabindex="-1"
+      aria-labelledby="miModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">ERRORES</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="cuerpoModal-errores"></div>
           <div class="modal-footer">
             <button
               type="button"
