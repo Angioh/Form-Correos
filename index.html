@@ -53,6 +53,17 @@
           elemento.className = "form-control is-valid";
         }
       }
+      function validarIDInside(elemento) {
+        if (!ValidateSpanishID(elemento.value)) {
+          elemento.style.backgroundColor = "lightyellow";
+          elemento.style.borderColor = "red";
+          elemento.className = "form-control is-invalid";
+        } else {
+          elemento.style.backgroundColor = "";
+          elemento.style.borderColor = "";
+          elemento.className = "form-control is-valid";
+        }
+      }
       function validarEmailInside(elemento) {
         if (!validarEmail(elemento)) {
           elemento.style.backgroundColor = "lightyellow";
@@ -95,7 +106,6 @@
           elemento.style.backgroundColor = "";
           elemento.style.borderColor = "";
           elemento.className = "form-control is-valid";
-          console.log(elemento.value)
         }
       }
 
@@ -108,8 +118,21 @@
         } else {
           mensCorrecto += "Empresa: " + company.value + ".\n";
         }
-        mensCorrecto += "Dirección: " + vias.value + " " + nomVia.value +" "+numero.value+" "
-        +piso.value+ " "+puerta.value +".\n";
+        mensCorrecto += "Documento: " + tipoId.value +" "+numId.value.toUpperCase()+ ".\n";
+        mensCorrecto += "Dirección: " + vias.value + " " + nomVia.value + ".\n";
+        if (numero.value != "")
+          mensCorrecto += "Número: " + numero.value + ".\n";
+        if (bloque.value != "")
+          mensCorrecto += "Bloque: " + bloque.value + ".\n";
+        if (portal.value != "")
+          mensCorrecto += "Portal: " + portal.value + ".\n";
+        if (piso.value != "") mensCorrecto += "Piso: " + piso.value + ".\n";
+        if (escalera.value != "")
+          mensCorrecto += "Escalera: " + escalera.value + ".\n";
+        if (puerta.value != "")
+          mensCorrecto += "Puerta: " + puerta.value + ".\n";
+        if (dirComp.value != "")
+          mensCorrecto += "Dirección complemento: " + dirComp.value + ".\n";
         mensCorrecto +=
           "Código postal: " +
           cPostal.value +
@@ -118,25 +141,28 @@
           ", Localidad:" +
           localidad.value +
           ".\n";
-
         mensCorrecto += "Móvil: " + movil.value + ", ";
         if (email.value != "") mensCorrecto += "Email: " + email.value + ", ";
         mensCorrecto += "Teléfono contacto: " + telefono.value + ".\n";
         mensCorrecto += "--DATOS DEL ENVÍO--\n";
-        mensCorrecto += "Referencia 1: "+ref1.value +".\n";
-        mensCorrecto += "Referencia 2: "+ref2.value +".\n";
-        mensCorrecto += "Referencia 3: "+ref3.value +".\n";
+        mensCorrecto += "Referencia 1: " + ref1.value + ".\n";
+        mensCorrecto += "Referencia 2: " + ref2.value + ".\n";
+        mensCorrecto += "Referencia 3: " + ref3.value + ".\n";
         mensCorrecto += "--PESO Y TAMAÑO--.\n";
-        mensCorrecto += "Peso: "+peso.value +"Kg.\n";
-        mensCorrecto += "Peso Volumétrico: "+pVolumetrico.value +"Kg.\n";
-        mensCorrecto += "Alto: "+alto.value +"cm.\n";
-        mensCorrecto += "Ancho: "+ancho.value +"cm.\n";
-        mensCorrecto += "Largo: "+largo.value +"cm.\n";
-        mensCorrecto += "Envío de vuelta: "+fechaVuelt.value +".\n";
-        mensCorrecto += "--SERVICIOS ADICIONALES DEL ENVÍO--\n";
-        mensCorrecto += "Seguro a todo riesgo: "+importe.value +"€.\n";
-        mensCorrecto += "Reembolo en cuenta: "+importReembolso.value +"€.\n";
-        mensCorrecto += "Número de cuenta: "+iban.value +"\n";
+        mensCorrecto += "Peso: " + peso.value + "Kg.\n";
+        mensCorrecto += "Peso Volumétrico: " + pVolumetrico.value + "Kg.\n";
+        mensCorrecto += "Alto: " + alto.value + "cm.\n";
+        mensCorrecto += "Ancho: " + ancho.value + "cm.\n";
+        mensCorrecto += "Largo: " + largo.value + "cm.\n";
+        mensCorrecto += "Envío de vuelta: " + fechaVuelt.value + ".\n";
+        if (importe.value != "" || importReembolso.value != "") {
+          mensCorrecto += "--SERVICIOS ADICIONALES DEL ENVÍO--\n";
+          mensCorrecto += "Seguro a todo riesgo: " + importe.value + "€.\n";
+          mensCorrecto +=
+            "Reembolo en cuenta: " + importReembolso.value + "€.\n";
+          mensCorrecto += "Número de cuenta: " + iban.value + "\n";
+        }
+
         mensCorrecto += "--OBSERVACIONES--.\n";
         mensCorrecto += observ.value;
 
@@ -171,11 +197,16 @@
           }
         }
 
+        if (!ValidateSpanishID(numId.value)) {
+          res = false;
+          mensaje += "Falta introducir un documento o no es correcto.\n";
+        }
+
         if (!validarString(nomVia.value, 2, 50)) {
           res = false;
           mensaje += "El nombre de la vía es obligatoria.\n";
         }
-        if(!validarVia(vias.value)){
+        if (!validarVia(vias.value)) {
           res = false;
           mensaje += "Seleccione un tipo de vía.\n";
         }
@@ -204,25 +235,45 @@
           mensaje += "El email introducido no es válido.\n";
         }
         if (!fechaVuelt.hasAttribute("disabled")) {
-          if(!validarFechaDes(fechaVuelt.value)){
-          res = false;
-          mensaje += "Formato de fecha inválido o muy cerca del día actual.\n";
+          if (!validarFechaDes(fechaVuelt.value)) {
+            res = false;
+            mensaje +=
+              "Formato de fecha inválido o muy cerca del día actual.\n";
+          }
         }
+        if (!validarNumber(peso.value, 2, 5)) {
+          res = false;
+          mensaje += "Falta el peso o el introducido no es válido.\n";
+        }
+        if (!validarNumber(pVolumetrico.value, 2, 5)) {
+          res = false;
+          mensaje += "Debe calcular primero el peso volumétrico.\n";
+        }
+        if (!validarNumber(alto.value, 2, 5)) {
+          res = false;
+          mensaje += "Ingrese una altura válida.\n";
+        }
+        if (!validarNumber(ancho.value, 2, 5)) {
+          res = false;
+          mensaje += "Ingrese un ancho válido.\n";
+        }
+        if (!validarNumber(largo.value, 2, 5)) {
+          res = false;
+          mensaje += "Ingrese un largo válido.\n";
         }
         if (!importe.hasAttribute("disabled")) {
-          if(!validarNumber(importe.value,2,5)){
-          res = false;
-          mensaje += "Importe de seguro no válido.\n";
-        }
-        }
-      
-        if (!importReembolso.hasAttribute("disabled")) {
-          if(!validarNumber(importReembolso.value,2,5)){
-          res = false;
-          mensaje += "Importe de reembolso no válido.\n";
-        }
+          if (!validarNumber(importe.value, 2, 5)) {
+            res = false;
+            mensaje += "Importe de seguro no válido.\n";
+          }
         }
 
+        if (!importReembolso.hasAttribute("disabled")) {
+          if (!validarNumber(importReembolso.value, 2, 5)) {
+            res = false;
+            mensaje += "Importe de reembolso no válido.\n";
+          }
+        }
 
         if (res == false) {
           document.getElementById("cuerpoModal-errores").innerText = mensaje;
@@ -340,16 +391,22 @@
                     >Tipo de documento:</label
                   >
                   <select name="" id="tipoId" class="form-select">
-                    <option value="DNI">DNI</option>
-                    <option value="NIE">NIE</option>
                     <option value="NIF">NIF</option>
+                    <option value="NIE">NIE</option>
+                    <option value="CIF">CIF</option>
                   </select>
                 </div>
                 <div class="col-md-4">
                   <label for="numId" class="form-label"
                     >Número Documento:</label
                   >
-                  <input type="text" id="numId" class="form-control" />
+                  <input
+                    type="text"
+                    id="numId"
+                    class="form-control"
+                    onfocus="entraFoco(this)"
+                    onblur="saleFoco(this);validarIDInside(this)"
+                  />
                 </div>
               </div>
             </div>
@@ -358,7 +415,11 @@
               <div class="row align-items-end">
                 <div class="col-md-4 mt-3">
                   <label for="vias" class="form-label">Tipo de vía:</label>
-                  <select class="form-select" id="vias" onchange="validarViaInside(this)">
+                  <select
+                    class="form-select"
+                    id="vias"
+                    onchange="validarViaInside(this)"
+                  >
                     <option selected value="" disabled>
                       Seleccione tipo vía
                     </option>
@@ -405,11 +466,11 @@
                   />
                 </div>
                 <div class="col-md-2">
-                  <label for="Portal" class="form-label">Portal</label>
+                  <label for="portal" class="form-label">Portal</label>
                   <input
                     type="text"
                     maxlength="5"
-                    id="Portal"
+                    id="portal"
                     class="form-control"
                   />
                 </div>
@@ -423,11 +484,11 @@
                   />
                 </div>
                 <div class="col-md-2">
-                  <label for="Escalera" class="form-label">Escalera</label>
+                  <label for="escalera" class="form-label">Escalera</label>
                   <input
                     type="text"
                     maxlength="5"
-                    id="Escalera"
+                    id="escalera"
                     class="form-control"
                   />
                 </div>
@@ -458,7 +519,9 @@
                   />
                 </div>
                 <div class="col-md-4">
-                  <label for="localidad" class="form-label">Localidad:(*)</label>
+                  <label for="localidad" class="form-label"
+                    >Localidad:(*)</label
+                  >
                   <input
                     type="text"
                     name=""
@@ -585,7 +648,7 @@
                       id="alto"
                       class="form-control"
                       onfocus="entraFoco(this)"
-                      onblur="saleFoco(this);validarNumberInside(this,1,5)"
+                      onblur="saleFoco(this);validarNumberInside(this,2,5)"
                     />
                   </div>
                   <div class="col-md-3">
@@ -642,10 +705,11 @@
               <div class="col-md-4 mt-2 mb-3">
                 <label for="fechaVuelt" class="form-label"
                   ><a
-                  href="#"
-                  data-bs-toggle="tooltip"
-                  title="Elija fecha a partir de 7 días siguientes a la fecha actual"
-                  >Fecha envío de vuelta</a></label
+                    href="#"
+                    data-bs-toggle="tooltip"
+                    title="Elija fecha a partir de 7 días siguientes a la fecha actual"
+                    >Fecha envío de vuelta</a
+                  ></label
                 >
                 <input
                   disabled
@@ -709,24 +773,37 @@
                 </div>
                 <div class="col-md-12 mb-4">
                   <label for="iban" class="form-label">IBAN</label>
-                  <input type="text" id="iban" disabled class="form-control" onchange="validarIbanInside(this)" />
+                  <input
+                    type="text"
+                    id="iban"
+                    disabled
+                    class="form-control"
+                    onchange="validarIbanInside(this)"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <!-- OBSERVACIONES -->
-           <div id="observaciones">
+          <div id="observaciones">
             <div style="border-top: 2px solid lightgray">
               <h3>Observaciones</h3>
               <p>
-                Si quieres mostrar alguna observación en la etiqueta del envío indícala a continuación.
+                Si quieres mostrar alguna observación en la etiqueta del envío
+                indícala a continuación.
               </p>
             </div>
             <div>
-              <textarea id="observ" maxlength="150" class="form-control" rows="5"></textarea>
-            </div><br>
+              <textarea
+                id="observ"
+                maxlength="150"
+                class="form-control"
+                rows="5"
+              ></textarea>
+            </div>
+            <br />
             <p>(*)Campo obligatorio.</p>
-           </div>
+          </div>
 
           <div class="row">
             <div class="col-2 mx-auto mt-3">
