@@ -137,6 +137,8 @@
         mensCorrecto += "Seguro a todo riesgo: "+importe.value +"€.\n";
         mensCorrecto += "Reembolo en cuenta: "+importReembolso.value +"€.\n";
         mensCorrecto += "Número de cuenta: "+iban.value +"\n";
+        mensCorrecto += "--OBSERVACIONES--.\n";
+        mensCorrecto += observ.value;
 
         return mensCorrecto;
       }
@@ -705,13 +707,26 @@
                     onblur="saleFoco(this);validarNumberInside(this,2,5)"
                   />
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 mb-4">
                   <label for="iban" class="form-label">IBAN</label>
                   <input type="text" id="iban" disabled class="form-control" onchange="validarIbanInside(this)" />
                 </div>
               </div>
             </div>
           </div>
+          <!-- OBSERVACIONES -->
+           <div id="observaciones">
+            <div style="border-top: 2px solid lightgray">
+              <h3>Observaciones</h3>
+              <p>
+                Si quieres mostrar alguna observación en la etiqueta del envío indícala a continuación.
+              </p>
+            </div>
+            <div>
+              <textarea id="observ" maxlength="150" class="form-control" rows="5"></textarea>
+            </div><br>
+            <p>(*)Campo obligatorio.</p>
+           </div>
 
           <div class="row">
             <div class="col-2 mx-auto mt-3">
